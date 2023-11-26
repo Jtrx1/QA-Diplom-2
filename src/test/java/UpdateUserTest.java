@@ -30,11 +30,13 @@ public class UpdateUserTest {
         accessToken = userResponse.getAccessToken();
     }
     @After
+    @DisplayName("Удаляем пользователя")
     @Step("Удаляем пользователя")
     public void exit(){
         userApiClient.deleteUser(accessToken);
     }
     @Test
+    @DisplayName("Изменяем Email пользователя")
     @Step("Изменяем Email пользователя")
     public void updateEmailUserTest(){
         String expected=CreateUserFaker.getFakerUser().getEmail();
@@ -46,6 +48,7 @@ public class UpdateUserTest {
         Assert.assertEquals(expected, actual);
     }
     @Test
+    @DisplayName("Изменяем Имя пользователя")
     @Step("Изменяем Имя пользователя")
     public void updatePasswordUserTest(){
         String expected=CreateUserFaker.getFakerUser().getName();
@@ -57,7 +60,8 @@ public class UpdateUserTest {
         Assert.assertEquals(expected, actual);
     }
     @Test
-    @Step("Попытка изменить данные без авторизации")
+    @DisplayName("Попытка изменения пользователя без авторизации")
+    @Step("Попытка изменения пользователя без авторизации")
     public void updateWithoutAutorizationUserTest(){
         user.setName(CreateUserFaker.getFakerUser().getName());
         Response response = userApiClient.updateUser("", user);

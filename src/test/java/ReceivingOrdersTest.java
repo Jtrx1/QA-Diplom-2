@@ -34,6 +34,7 @@ public class ReceivingOrdersTest {
     }
 
     @Step("Получаем заказы авторизованного пользователя")
+    @DisplayName("Получаем заказы авторизованного пользователя")
     @Test
     public void ReceivingOrdersWithAutorization(){
         Response response = orderApiClient.receinvgOrder(accessToken);
@@ -43,6 +44,7 @@ public class ReceivingOrdersTest {
     }
     @Test
     @Step("Пользователь не авторизован")
+    @DisplayName("Пользователь не авторизован")
     public void ReceivingOrdersWithoutAutorization(){
         Response response = orderApiClient.receinvgOrder("");
         GetOrders getOrders = response.as(GetOrders.class);

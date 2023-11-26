@@ -73,7 +73,7 @@ public class OrdersTest {
     }
     @Test
     @Step("Заказ с неверным хешем ингридиентов")
-    @DisplayName("Заказ без ингридиентов")
+    @DisplayName("Заказ с неверным хешем ингридиентов")
     public void orderInvalidHashTest(){
         Ingredients ingredients=CreateIngredient.ingredientInvalidHash();
         Response response=orderApiClient.createOrderWithoutAutorization(ingredients);
