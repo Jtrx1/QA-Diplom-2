@@ -10,7 +10,7 @@ public class CreateIngredient {
 
     @Step("Создаем заказ с рандомным количество ингридиентов")
     public static Ingredients someIngredients(){
-        OrderApiClient orderApiClient=new OrderApiClient();
+      OrderApiClient orderApiClient=new OrderApiClient();
         Random random = new Random();
         int j =random.nextInt(orderApiClient.getIngredients().as(GetIngredients.class).getData().size());
         String[] ingredient = new String[j];

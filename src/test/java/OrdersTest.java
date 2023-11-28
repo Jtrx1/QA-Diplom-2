@@ -7,6 +7,7 @@ import org.example.client.UserApiClient;
 import org.example.helper.CreateIngredient;
 import org.example.helper.CreateUserFaker;
 import org.example.model.*;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ import static org.apache.http.HttpStatus.*;
 public class OrdersTest {
     private OrderApiClient orderApiClient;
     private UserApiClient userApiClient;
-    private String accessToken;
+    String accessToken;
     @Before
     public void init(){
         orderApiClient=new OrderApiClient();
@@ -28,27 +29,31 @@ public class OrdersTest {
         UserResponse userResponse = resp.as(UserResponse.class);
         accessToken = userResponse.getAccessToken();
     }
-    @Before
+    @After
     public void exit(){
         userApiClient.deleteUser(accessToken);
     }
+
     @Test
     @Step("Заказ с несколькими ингридиетами")
     @DisplayName("Заказ с несколькими ингридиетами")
     public void orderSomeIngredientsTest(){
         Response response=orderApiClient.createOrder(CreateIngredient.someIngredients(), accessToken);
         Assert.assertEquals(SC_OK, response.statusCode());
-        OrderResponse orderResponse=response.as(OrderResponse.class);
-        Assert.assertTrue(orderResponse.isSuccess());
+       /* OrderResponse orderResponse=response.as(OrderResponse.class);
+        Assert.assertTrue(orderResponse.isSuccess());*/
+        CreateOrderResponse createOrderResponse=response.as(CreateOrderResponse.class);
+        Assert.assertTrue(createOrderResponse.isSuccess());
     }
+
     @Test
     @Step("Заказ с одним ингридиентом")
     @DisplayName("Заказ с одним ингридиентом")
     public void orderIngredientsTest(){
         Response response=orderApiClient.createOrder(CreateIngredient.ingredient(), accessToken);
         Assert.assertEquals(SC_OK, response.statusCode());
-        OrderResponse orderResponse=response.as(OrderResponse.class);
-        Assert.assertTrue(orderResponse.isSuccess());
+        CreateOrderResponse createOrderResponse=response.as(CreateOrderResponse.class);
+        Assert.assertTrue(createOrderResponse.isSuccess());
     }
     @Test
     @Step("Заказ неавторизованного пользователя")
@@ -56,8 +61,8 @@ public class OrdersTest {
     public void orderWithoutAutorezationTest(){
         Response response=orderApiClient.createOrderWithoutAutorization(CreateIngredient.someIngredients());
         Assert.assertEquals(SC_OK, response.statusCode());
-        OrderResponse orderResponse=response.as(OrderResponse.class);
-        Assert.assertTrue(orderResponse.isSuccess());
+        CreateOrderResponse createOrderResponse=response.as(CreateOrderResponse.class);
+        Assert.assertTrue(createOrderResponse.isSuccess());
     }
     @Test
     @Step("Заказ без ингридиентов")
@@ -67,9 +72,9 @@ public class OrdersTest {
         Ingredients ingredients=new Ingredients(strings);
         Response response=orderApiClient.createOrder(ingredients, accessToken);
         Assert.assertEquals(SC_BAD_REQUEST, response.statusCode());
-        OrderResponse orderResponse=response.as(OrderResponse.class);
-        Assert.assertFalse(orderResponse.isSuccess());
-        Assert.assertEquals("Ingredient ids must be provided", orderResponse.getMessage());
+        CreateOrderResponse createOrderResponse=response.as(CreateOrderResponse.class);
+        Assert.assertFalse(createOrderResponse.isSuccess());
+        Assert.assertEquals("Ingredient ids must be provided", createOrderResponse.getMessage());
     }
     @Test
     @Step("Заказ с неверным хешем ингридиентов")
@@ -79,5 +84,6 @@ public class OrdersTest {
         Response response=orderApiClient.createOrderWithoutAutorization(ingredients);
         Assert.assertEquals(SC_INTERNAL_SERVER_ERROR, response.statusCode());
     }
+
 
 }
